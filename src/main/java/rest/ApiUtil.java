@@ -6,10 +6,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+
 import io.restassured.RestAssured;
 import io.restassured.path.json.JsonPath;
-import io.restassured.specification.RequestSpecification;
 import io.restassured.response.Response;
+import io.restassured.specification.RequestSpecification;
 
 public class ApiUtil {
 	private static String BASE_URL;
@@ -557,65 +558,6 @@ public class ApiUtil {
 	}
 
 	/**
-	 * @Test10 - This method sends a PUT request to update a custom field
-	 *        configuration in the system.
-	 * 
-	 * @description This method constructs and executes a PUT API call to the
-	 *              specified endpoint using a session cookie ("orangehrm") for
-	 *              authentication. It accepts a request body as a JSON-formatted
-	 *              string containing custom field details. The response is parsed
-	 *              to extract the HTTP status and relevant custom field attributes
-	 *              from the "data" object, including "id", "fieldName",
-	 *              "fieldType", "extraData", and "screen". These values are
-	 *              collected and returned in a CustomResponse object for validation
-	 *              or further processing.
-	 *
-	 * @param endpoint    - The specific API endpoint to hit (relative to the base
-	 *                    URL).
-	 * @param cookieValue - The session cookie value to authenticate the request.
-	 * @param body        - The request body as a JSON-formatted String containing
-	 *                    custom field configuration.
-	 *
-	 * @return CustomResponse - A custom response object containing the full HTTP
-	 *         response, status code, status line, and lists of extracted custom
-	 *         field attributes from the response "data" object.
-	 */
-	public CustomResponse PutCustomField(String endpoint, String cookieValue, String body) {
-		RequestSpecification request = RestAssured.given().cookie("orangehrm", cookieValue).header("Content-Type",
-				"application/json");
-
-		if (body != null) {
-			request.body(body);
-		}
-
-		Response response = request.put(BASE_URL + endpoint).then().extract().response();
-
-		int statusCode = response.getStatusCode();
-		String status = response.getStatusLine();
-
-		List<Object> id = new ArrayList<>();
-		List<Object> fieldName = new ArrayList<>();
-		List<Object> fieldType = new ArrayList<>();
-		List<Object> extraData = new ArrayList<>();
-		List<Object> screen = new ArrayList<>();
-
-		JsonPath jsonPath = response.jsonPath();
-		Map<String, Object> data = jsonPath.getMap("data");
-
-		if (data != null) {
-			id.add(data.get("id"));
-			fieldName.add(data.get("fieldName"));
-			fieldType.add(data.get("fieldType"));
-			extraData.add(data.get("extraData"));
-			screen.add(data.get("screen"));
-		} else {
-			System.out.println("⚠️ 'data' field is null in response. Status code: " + statusCode);
-		}
-
-		return new CustomResponse(response, statusCode, status, id, fieldName, fieldType, extraData, screen);
-	}
-
-	/**
 	 * @Test9 - This method sends a POST request to create a new custom field
 	 *        configuration in the system.
 	 * 
@@ -648,6 +590,65 @@ public class ApiUtil {
 		}
 
 		Response response = request.post(BASE_URL + endpoint).then().extract().response();
+
+		int statusCode = response.getStatusCode();
+		String status = response.getStatusLine();
+
+		List<Object> id = new ArrayList<>();
+		List<Object> fieldName = new ArrayList<>();
+		List<Object> fieldType = new ArrayList<>();
+		List<Object> extraData = new ArrayList<>();
+		List<Object> screen = new ArrayList<>();
+
+		JsonPath jsonPath = response.jsonPath();
+		Map<String, Object> data = jsonPath.getMap("data");
+
+		if (data != null) {
+			id.add(data.get("id"));
+			fieldName.add(data.get("fieldName"));
+			fieldType.add(data.get("fieldType"));
+			extraData.add(data.get("extraData"));
+			screen.add(data.get("screen"));
+		} else {
+			System.out.println("⚠️ 'data' field is null in response. Status code: " + statusCode);
+		}
+
+		return new CustomResponse(response, statusCode, status, id, fieldName, fieldType, extraData, screen);
+	}
+
+	/**
+	 * @Test10 - This method sends a PUT request to update a custom field
+	 *         configuration in the system.
+	 * 
+	 * @description This method constructs and executes a PUT API call to the
+	 *              specified endpoint using a session cookie ("orangehrm") for
+	 *              authentication. It accepts a request body as a JSON-formatted
+	 *              string containing custom field details. The response is parsed
+	 *              to extract the HTTP status and relevant custom field attributes
+	 *              from the "data" object, including "id", "fieldName",
+	 *              "fieldType", "extraData", and "screen". These values are
+	 *              collected and returned in a CustomResponse object for validation
+	 *              or further processing.
+	 *
+	 * @param endpoint    - The specific API endpoint to hit (relative to the base
+	 *                    URL).
+	 * @param cookieValue - The session cookie value to authenticate the request.
+	 * @param body        - The request body as a JSON-formatted String containing
+	 *                    custom field configuration.
+	 *
+	 * @return CustomResponse - A custom response object containing the full HTTP
+	 *         response, status code, status line, and lists of extracted custom
+	 *         field attributes from the response "data" object.
+	 */
+	public CustomResponse PutCustomField(String endpoint, String cookieValue, String body) {
+		RequestSpecification request = RestAssured.given().cookie("orangehrm", cookieValue).header("Content-Type",
+				"application/json");
+
+		if (body != null) {
+			request.body(body);
+		}
+
+		Response response = request.put(BASE_URL + endpoint).then().extract().response();
 
 		int statusCode = response.getStatusCode();
 		String status = response.getStatusLine();
